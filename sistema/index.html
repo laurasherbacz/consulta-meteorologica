@@ -22,39 +22,36 @@
     <h1 id="titulo-pesquisa">Como está o tempo por aí?</h1>
     <p>Pesquise uma cidade para consultar a previsão.</p>
     <form class="formulario">
-      <label class="campo"><span aria-hidden="true">⌕</span><input aria-label="Nome da cidade" type="search" placeholder="Digite uma cidade" value="Porto Alegre" required></label>
+      <label class="campo"><span aria-hidden="true">⌕</span><input aria-label="Nome da cidade" type="search" placeholder="Digite uma cidade" required></label>
       <button class="botao principal" type="submit">Pesquisar</button>
     </form>
     <h2 class="rotulo">Localidades encontradas</h2>
-    <div class="resultados">
-      <button type="button" class="localidade selecionada"><span class="pin" aria-hidden="true"><svg class="icone" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span><span><strong>Porto Alegre</strong><small>Rio Grande do Sul, Brasil</small></span><span class="seta" aria-hidden="true">›</span></button>
-      <button type="button" class="localidade"><span class="pin" aria-hidden="true"><svg class="icone" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span><span><strong>Porto Alegre do Norte</strong><small>Mato Grosso, Brasil</small></span><span class="seta" aria-hidden="true">›</span></button>
-    </div>
-    <div class="mensagem" role="status"><span aria-hidden="true">●</span> Previsão atualizada para Porto Alegre.</div>
+    <div class="resultados"></div>
+    <div class="mensagem" role="status"><span aria-hidden="true">●</span> Pesquise uma cidade para consultar a previsão.</div>
   </section>
 
   <div class="conteudo">
     <section class="clima" aria-labelledby="cidade">
       <div class="titulo-cidade">
-        <div><h2 id="cidade">Porto Alegre</h2><p>Rio Grande do Sul, Brasil</p></div>
+        <div><h2 id="cidade">Nenhuma cidade selecionada</h2><p>Pesquise uma cidade para começar.</p></div>
         <button type="button" class="botao favorito"><span aria-hidden="true">☆</span> Adicionar aos favoritos</button>
       </div>
       <div class="tempo-atual">
         <h3 class="rotulo">Condições atuais</h3>
-        <div class="temperatura"><span class="icone-tempo" aria-hidden="true">🌤️</span><div><strong>24°C</strong><p>Parcialmente nublado</p></div><span class="nuvem" aria-hidden="true">☁️</span></div>
+        <div class="temperatura"><span class="icone-tempo" aria-hidden="true">🌤️</span><div><strong>—</strong><p>Sem previsão carregada</p></div><span class="nuvem" aria-hidden="true">☁️</span></div>
       </div>
       <div class="indicadores">
-        <div class="indicador"><span aria-hidden="true">🌡️</span><div><small>Sensação térmica</small><strong>26°C</strong></div></div>
-        <div class="indicador"><span aria-hidden="true">≋</span><div><small>Vento</small><strong>12 km/h</strong></div></div>
-        <div class="indicador"><span aria-hidden="true">💧</span><div><small>Umidade</small><strong>68%</strong></div></div>
+        <div class="indicador"><span aria-hidden="true">🌡️</span><div><small>Sensação térmica</small><strong>—</strong></div></div>
+        <div class="indicador"><span aria-hidden="true">≋</span><div><small>Vento</small><strong>—</strong></div></div>
+        <div class="indicador"><span aria-hidden="true">💧</span><div><small>Umidade</small><strong>—</strong></div></div>
       </div>
       <h3 class="titulo-previsao">Previsão para 5 dias</h3>
       <div class="previsao">
-        <article class="dia"><h4>Hoje <span>· 15 out</span></h4><span class="icone-dia" aria-hidden="true">🌤️</span><p>Parcialmente nublado</p><strong class="maxima">Máx. 26°</strong><strong class="minima">Mín. 18°</strong><small>💧 20%</small></article>
-        <article class="dia"><h4>Sex <span>· 16 out</span></h4><span class="icone-dia" aria-hidden="true">☀️</span><p>Céu limpo</p><strong class="maxima">Máx. 28°</strong><strong class="minima">Mín. 19°</strong><small>💧 5%</small></article>
-        <article class="dia"><h4>Sáb <span>· 17 out</span></h4><span class="icone-dia" aria-hidden="true">☁️</span><p>Nublado</p><strong class="maxima">Máx. 25°</strong><strong class="minima">Mín. 18°</strong><small>💧 35%</small></article>
-        <article class="dia"><h4>Dom <span>· 18 out</span></h4><span class="icone-dia" aria-hidden="true">🌧️</span><p>Chuva</p><strong class="maxima">Máx. 22°</strong><strong class="minima">Mín. 17°</strong><small>💧 80%</small></article>
-        <article class="dia"><h4>Seg <span>· 19 out</span></h4><span class="icone-dia" aria-hidden="true">🌤️</span><p>Parcialmente nublado</p><strong class="maxima">Máx. 24°</strong><strong class="minima">Mín. 16°</strong><small>💧 15%</small></article>
+        <article class="dia"><h4>—</h4><span class="icone-dia" aria-hidden="true">🌤️</span><p>Sem previsão carregada</p><strong class="maxima">Máx. —</strong><strong class="minima">Mín. —</strong><small>💧 —</small></article>
+        <article class="dia"><h4>—</h4><span class="icone-dia" aria-hidden="true">🌤️</span><p>Sem previsão carregada</p><strong class="maxima">Máx. —</strong><strong class="minima">Mín. —</strong><small>💧 —</small></article>
+        <article class="dia"><h4>—</h4><span class="icone-dia" aria-hidden="true">🌤️</span><p>Sem previsão carregada</p><strong class="maxima">Máx. —</strong><strong class="minima">Mín. —</strong><small>💧 —</small></article>
+        <article class="dia"><h4>—</h4><span class="icone-dia" aria-hidden="true">🌤️</span><p>Sem previsão carregada</p><strong class="maxima">Máx. —</strong><strong class="minima">Mín. —</strong><small>💧 —</small></article>
+        <article class="dia"><h4>—</h4><span class="icone-dia" aria-hidden="true">🌤️</span><p>Sem previsão carregada</p><strong class="maxima">Máx. —</strong><strong class="minima">Mín. —</strong><small>💧 —</small></article>
       </div>
     </section>
 
