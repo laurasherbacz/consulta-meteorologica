@@ -329,3 +329,132 @@ const descricoesClima = {
 // Fazer funcionar a parte dos favoritos 
 
 
+const botaoFavorito = document.querySelector('.favorito'); 
+const listaFavoritos = document.querySelector('.lista-favoritos');
+const quantidadeFavoritos = document.querySelector('#quantidade-favoritos');
+
+function atualizarBotaoFavorito(){
+
+  if(cidadeAtual === null){
+    return; 
+  }
+
+  const jaExiste = favoritos.some(function(cidade){
+    return cidade.latitude === cidadeAtual.latitude
+     && cidade.longitude === cidadeAtual.longitude; 
+}); 
+
+if(jaExiste){
+  botaoFavorito.textContent = '★ Remover dos favoritos';
+}else{
+  botaoFavorito.textContent = '☆ Adicionar aos favoritos';
+}
+}
+
+botaoFavorito.addEventListener('click', function(){
+  if(cidadeAtual === null){
+    return; 
+  }
+
+  const jaExiste = favoritos.some(function(cidade){
+    return cidade.latitude  === cidadeAtual.latitude && 
+    cidade.longitude === cidadeAtual.longitude; 
+  }); 
+
+  if(jaExiste){
+    favoritos = favoritos.filter(function(cidade){
+      return cidade.latitude  !== cidadeAtual.latitude ||
+      cidade.longitude !== cidadeAtual.longitude; 
+    }); 
+
+  }else{
+    favoritos.push(cidadeAtual); 
+  }
+
+  localStorage.setItem('cidades-favoritas', JSON.stringify(favoritos));
+
+  mostrarFavoritos(); 
+  atualizarBotaoFavorito(); 
+}); 
+
+function mostrarFavoritos(){
+
+  listaFavoritos.replaceChildren();
+
+  quantidadeFavoritos.textContent = favoritos.length + ' ' +
+  (favoritos.length === 1 ? 'cidade salva' : 'cidades salvas'); 
+
+  favoritos.forEach(function(cidade){
+    const item = document.createElement('li'); 
+    const botaoCidade = document.createElement('button'); 
+    const botaoRemover = document.createElement('button'); 
+
+    botaoCidade.type = 'button'; 
+    botaoCidade.className = 'cidade-favorita'; 
+    const detalhesCidade = document.createElement('span');
+    const nomeCidade = document.createElement('strong');
+    const regiaoCidade = document.createElement('small');
+
+    nomeCidade.textContent = cidade.name;
+    regiaoCidade.textContent = [cidade.admin1, cidade.country]
+      .filter(Boolean)
+      .join(', ') || 'Localização não informada';
+    detalhesCidade.append(nomeCidade, regiaoCidade);
+    botaoCidade.append(detalhesCidade);
+
+    botaoRemover.type = 'button'; 
+    botaoRemover.className = 'remover-favorito';
+    botaoRemover.setAttribute('aria-label', `Remover ${cidade.name} dos favoritos`);
+    botaoRemover.title = 'Remover dos favoritos';
+    botaoRemover.textContent = '🗑️';
+
+    botaoCidade.addEventListener('click', function(){
+      carregarClima(cidade, null);
+    });
+
+    botaoRemover.addEventListener('click', function(){
+       const confirmar = window.confirm(`Deseja realmente remover ${cidade.name} dos favoritos?`);
+
+       if(confirmar){
+
+      favoritos = favoritos.filter(function(item){
+        return item.latitude !== cidade.latitude || 
+        item.longitude !== cidade.longitude; 
+      }); 
+
+     localStorage.setItem('cidades-favoritas', JSON.stringify(favoritos));
+      mostrarFavoritos(); 
+
+      function obterCidadeAtual() {
+        const cidadeSalva = localStorage.getItem(CHAVE_CIDADE_ATUAL);
+
+        if (!cidadeSalva) {
+          return null;
+        }
+
+        try {
+          return JSON.parse(cidadeSalva);
+        } catch (erro) {
+          console.error('Não foi possível carregar a cidade salva.', erro);
+          localStorage.removeItem(CHAVE_CIDADE_ATUAL);
+          return null;
+        }
+      }
+
+      const cidadeSalva = obterCidadeAtual();
+      if (cidadeSalva) {
+        carregarClima(cidadeSalva, null);
+      }
+      atualizarBotaoFavorito(); 
+
+  }}); 
+
+    item.append(botaoCidade, botaoRemover); 
+    listaFavoritos.appendChild(item); 
+
+  }); 
+
+
+}
+
+mostrarFavoritos();
