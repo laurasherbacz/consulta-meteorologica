@@ -1,3 +1,4 @@
+// Elementos usados na busca de uma cidade pelo nome.
 const formulario = document.querySelector('.formulario');
 const campoNome = formulario.querySelector('input[type="search"]');
 const botao = formulario.querySelector('.principal');
@@ -7,6 +8,7 @@ const resultados = document.querySelector('.resultados');
 formulario.addEventListener('submit', function (evento) {
   evento.preventDefault();
 
+  // Remove espaços extras antes de enviar o termo para a API.
   const termo = campoNome.value.trim();
   if (termo === '') {
     mensagem.textContent = 'Digite o nome de uma cidade para pesquisar.';
@@ -32,6 +34,7 @@ formulario.addEventListener('submit', function (evento) {
       return resposta.json();
     })
     .then(function (dados) {
+      // Cada nova busca substitui os resultados exibidos anteriormente.
       resultados.replaceChildren();
 
       if (!dados.results || dados.results.length === 0) {
@@ -40,6 +43,8 @@ formulario.addEventListener('submit', function (evento) {
       }
 
       dados.results.slice(0, 5).forEach(function (localidade) {
+        // Monta o botão de cada localidade encontrada sem inserir HTML
+        // diretamente, evitando interpretar valores vindos da API como marcação.
         const botaoLocalidade = document.createElement('button');
         const identificacao = document.createElement('span');
         const detalhes = document.createElement('span');
@@ -71,10 +76,12 @@ formulario.addEventListener('submit', function (evento) {
       mensagem.textContent = 'Não foi possível buscar localidades. Tente novamente.';
     })
     .finally(function () {
+      // O botão volta a ser habilitado tanto em caso de sucesso quanto de erro.
       botao.disabled = false;
     });
 });
 
+// Elementos da área que apresenta a previsão da cidade selecionada.
 const tituloCidade = document.querySelector('#cidade');
 const regiaoCidade = tituloCidade.parentElement.querySelector('p');
 const temperaturaAtual = document.querySelector('.temperatura strong');
@@ -84,6 +91,7 @@ const ventoAtual = document.querySelectorAll('.indicador strong')[1];
 const umidadeAtual = document.querySelectorAll('.indicador strong')[2];
 const cartoesPrevisao = document.querySelectorAll('.previsao .dia');
 
+// Associação entre os códigos meteorológicos da API e os ícones exibidos.
 const iconesClima = {
   0: '☀️',
   1: '🌤️',
@@ -109,9 +117,12 @@ const iconesClima = {
 
 const CHAVE_CIDADE_ATUAL = 'cidade-atual';
 let cidadeAtual = null;
+// Recupera favoritos salvos anteriormente; quando não há dados, inicia uma lista vazia.
 let favoritos = JSON.parse(localStorage.getItem('cidades-favoritas') || '[]'); 
 
 function carregarClima(localidade, botaoSelecionado) {
+  // Busca as condições atuais e a previsão de cinco dias para as coordenadas
+  // da localidade escolhida.
   mensagem.textContent = `Buscando previsão para ${localidade.name}...`;
 
   const parametros = new URLSearchParams({
@@ -135,6 +146,7 @@ function carregarClima(localidade, botaoSelecionado) {
       const atual = dados.current;
       const unidades = dados.current_units;
 
+      // Mantém a cidade selecionada disponível para favoritos e restauração futura.
       cidadeAtual = localidade; 
       localStorage.setItem(CHAVE_CIDADE_ATUAL, JSON.stringify(localidade));
       atualizarBotaoFavorito(); 
@@ -150,6 +162,7 @@ function carregarClima(localidade, botaoSelecionado) {
       mensagem.textContent = `Previsão atualizada para ${localidade.name}.`;
 
       document.querySelectorAll('.localidade').forEach(function (item) {
+        // Destaca somente o botão correspondente à cidade selecionada.
         item.classList.toggle('selecionada', item === botaoSelecionado);
       });
     })
@@ -160,6 +173,7 @@ function carregarClima(localidade, botaoSelecionado) {
 }
 
 function atualizarPrevisao(previsao) {
+  // Formata as datas no padrão brasileiro para os cartões da previsão.
   const formatadorData = new Intl.DateTimeFormat('pt-BR', {
     weekday: 'short',
     day: '2-digit',
@@ -179,6 +193,7 @@ function atualizarPrevisao(previsao) {
     const minima = cartao.querySelector('.minima');
     const chuva = cartao.querySelector('small');
 
+    // O primeiro cartão representa o dia atual; os demais mostram a data.
     titulo.textContent = indice === 0 ? 'Hoje' : formatadorData.format(data);
     icone.textContent = iconesClima[previsao.weather_code[indice]] || '🌤️';
     descricao.textContent = descricoesClima[previsao.weather_code[indice]] || 'Condição não disponível';
@@ -188,6 +203,8 @@ function atualizarPrevisao(previsao) {
   });
 }
 
+// Trata também os botões de localidades que já existem no HTML inicial.
+// Os resultados criados após uma busca recebem seu próprio listener acima.
 document.querySelectorAll('.localidade').forEach(function (botaoLocalidade) {
   botaoLocalidade.addEventListener('click', function () {
     const nome = botaoLocalidade.querySelector('strong').textContent;
@@ -225,6 +242,7 @@ const buscar = document.querySelector('.buscar-coordenadas');
 const mensagemCoordenadas = document.querySelector('.mensagem-coordenadas');
 const resultado = document.querySelector('.resultado-coordenadas');
 
+// Textos correspondentes aos códigos meteorológicos retornados pela API.
 const descricoesClima = {
 			0: 'Céu limpo',
 			1: 'Predominantemente limpo',
@@ -306,6 +324,7 @@ const descricoesClima = {
 				`Clima: ${descricoesClima[atual.weather_code] || 'Descrição não disponível'}`
             ]; 
 
+            // Converte cada informação da resposta em um item da lista de resultados.
             itens.forEach(function(texto){
                 const item = document.createElement('li'); 
 
@@ -326,9 +345,7 @@ const descricoesClima = {
           });
         }
 
-// Fazer funcionar a parte dos favoritos 
-
-
+// Elementos e estado usados no gerenciamento de cidades favoritas.
 const botaoFavorito = document.querySelector('.favorito'); 
 const listaFavoritos = document.querySelector('.lista-favoritos');
 const quantidadeFavoritos = document.querySelector('#quantidade-favoritos');
@@ -340,6 +357,7 @@ function atualizarBotaoFavorito(){
   }
 
   const jaExiste = favoritos.some(function(cidade){
+    // Latitude e longitude identificam a localidade com mais precisão que o nome.
     return cidade.latitude === cidadeAtual.latitude
      && cidade.longitude === cidadeAtual.longitude; 
 }); 
@@ -362,12 +380,14 @@ botaoFavorito.addEventListener('click', function(){
   }); 
 
   if(jaExiste){
+    // Remove a cidade atual quando ela já está salva.
     favoritos = favoritos.filter(function(cidade){
       return cidade.latitude  !== cidadeAtual.latitude ||
       cidade.longitude !== cidadeAtual.longitude; 
     }); 
 
   }else{
+    // Caso contrário, adiciona a cidade atualmente exibida à lista.
     favoritos.push(cidadeAtual); 
   }
 
@@ -378,13 +398,14 @@ botaoFavorito.addEventListener('click', function(){
 }); 
 
 function mostrarFavoritos(){
-
+  // Reconstrói a lista para refletir adições e remoções imediatamente.
   listaFavoritos.replaceChildren();
 
   quantidadeFavoritos.textContent = favoritos.length + ' ' +
   (favoritos.length === 1 ? 'cidade salva' : 'cidades salvas'); 
 
   favoritos.forEach(function(cidade){
+    // Cada favorito possui um botão para abrir a previsão e outro para removê-lo.
     const item = document.createElement('li'); 
     const botaoCidade = document.createElement('button'); 
     const botaoRemover = document.createElement('button'); 
@@ -416,7 +437,7 @@ function mostrarFavoritos(){
        const confirmar = window.confirm(`Deseja realmente remover ${cidade.name} dos favoritos?`);
 
        if(confirmar){
-
+      // Atualiza a lista persistida somente após a confirmação do usuário.
       favoritos = favoritos.filter(function(item){
         return item.latitude !== cidade.latitude || 
         item.longitude !== cidade.longitude; 
@@ -426,6 +447,7 @@ function mostrarFavoritos(){
       mostrarFavoritos(); 
 
       function obterCidadeAtual() {
+        // Recupera a última cidade selecionada para manter a tela sincronizada.
         const cidadeSalva = localStorage.getItem(CHAVE_CIDADE_ATUAL);
 
         if (!cidadeSalva) {
@@ -435,6 +457,7 @@ function mostrarFavoritos(){
         try {
           return JSON.parse(cidadeSalva);
         } catch (erro) {
+          // Remove dados corrompidos para evitar falhas nas próximas inicializações.
           console.error('Não foi possível carregar a cidade salva.', erro);
           localStorage.removeItem(CHAVE_CIDADE_ATUAL);
           return null;
@@ -457,4 +480,5 @@ function mostrarFavoritos(){
 
 }
 
+// Exibe os favoritos salvos assim que o script é carregado.
 mostrarFavoritos();
